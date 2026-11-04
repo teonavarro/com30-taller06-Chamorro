@@ -1,0 +1,10 @@
+/* Estilos globales de la aplicación */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 20px;
+  color: #222;
+}

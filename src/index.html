@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Taller 06 - Reserva de Espacios (E3)</title>
+    <base href="/" />
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 20px;
+        color: #222;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+      }
+      h2 {
+        font-size: 1.2rem;
+        margin-top: 24px;
+      }
+      .campo {
+        margin-bottom: 10px;
+      }
+      label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+      input,
+      select {
+        padding: 6px;
+        font-size: 0.9rem;
+        width: 220px;
+        box-sizing: border-box;
+      }
+      input[type='number'] {
+        width: 100px;
+      }
+      input[type='time'],
+      input[type='date'] {
+        width: 160px;
+      }
+      button {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        margin-right: 6px;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .error {
+        color: #c00;
+        font-size: 0.8rem;
+        margin-top: 4px;
+        display: block;
+      }
+      fieldset {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 12px 0;
+      }
+      legend {
+        font-weight: bold;
+        padding: 0 6px;
+      }
+      .fila {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+      .fila input[type='number'] {
+        width: 90px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        border: 1px solid #bbb;
+        padding: 6px 8px;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+      th {
+        background: #f4f4f4;
+      }
+      select {
+        width: auto;
+      }
+      .panel-estadisticas {
+        border: 1px solid #2c7;
+        background: #f0fff6;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

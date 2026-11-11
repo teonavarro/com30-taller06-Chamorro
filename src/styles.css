@@ -8,3 +8,85 @@ body {
   margin: 20px;
   color: #222;
 }
+
+/* Búsqueda reactiva */
+.busqueda-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.busqueda-container input {
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  min-width: 260px;
+}
+
+.busqueda-container select {
+  padding: 8px 10px;
+  font-size: 0.95rem;
+}
+
+.msg {
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.msg.aviso {
+  color: #b45309;
+}
+
+.msg.cargando {
+  color: #1d4ed8;
+  font-style: italic;
+}
+
+.resumen {
+  margin: 12px 0;
+  padding: 10px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.resumen span {
+  font-weight: 600;
+}
+
+.panel-historial {
+  margin-top: 20px;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
+.panel-historial h3 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 8px;
+  margin: 2px 4px 2px 0;
+  background: #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.chip.vacio {
+  background: transparent;
+  color: #94a3b8;
+}
+
+.llamadas {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #334155;
+}

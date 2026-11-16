@@ -6,6 +6,7 @@ import {
   FormArray,
   Validators
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ReservaService } from '../../services/reserva.service';
 import { Reserva } from '../../models/reserva';
 import { noSinEspacios, rangoHorarios, minimoFilas } from '../../validators/validadores';
@@ -108,6 +109,7 @@ import { noSinEspacios, rangoHorarios, minimoFilas } from '../../validators/vali
 export class ReservaFormComponent {
   private fb = inject(FormBuilder);
   private reservaService = inject(ReservaService);
+  private router = inject(Router);
 
   form: FormGroup;
 
@@ -192,7 +194,8 @@ export class ReservaFormComponent {
       }))
     };
 
-    this.reservaService.agregarReserva(reserva);
+    const nuevoId = this.reservaService.agregarReserva(reserva);
     this.form.reset();
+    this.router.navigate(['/reservas', nuevoId]);
   }
 }

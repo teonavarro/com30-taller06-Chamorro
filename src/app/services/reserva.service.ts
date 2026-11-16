@@ -187,14 +187,16 @@ export class ReservaService {
   /**
    * Agrega una nueva reserva (sin id ni estado; el servicio los asigna).
    * Usa update() y arreglos inmutables (sin push/splice).
+   * Devuelve el ID de la nueva reserva creada.
    */
-  agregarReserva(reserva: Omit<Reserva, 'id' | 'estado'>) {
+  agregarReserva(reserva: Omit<Reserva, 'id' | 'estado'>): number {
     const nueva: Reserva = {
       ...reserva,
       id: Date.now(),
       estado: 'Pendiente'
     };
     this.#reservas.update((lista) => [...lista, nueva]);
+    return nueva.id;
   }
 
   /**

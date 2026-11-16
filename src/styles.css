@@ -90,3 +90,18 @@ body {
   font-size: 0.9rem;
   color: #334155;
 }
+
+/* Filtros de estado en ReservaListaComponent */
+.filtros {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+/* Input de búsqueda en ReservaListaComponent */
+input[placeholder="Buscar por responsable o espacio..."] {
+  width: 100%;
+  max-width: 380px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+}

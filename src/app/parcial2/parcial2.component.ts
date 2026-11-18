@@ -1,19 +1,25 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed, Signal } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
+  FormControl
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, debounceTime, distinctUntilChanged, scan } from 'rxjs';
 import { validadorMultiplo, validadorHastaMayor } from './validadores';
+import { ReservaService } from '../services/reserva.service';
+import { Reserva } from '../models/reserva';
 
 @Component({
   selector: 'app-parcial2',
   standalone: true,
   imports: [ReactiveFormsModule],
   template: `
-    <h2>Parcial 2 - Requisito R1</h2>
+    <h2>Parcial 2 - Requisito R1 y R2</h2>
+
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <div class="campo">
@@ -84,6 +90,43 @@ import { validadorMultiplo, validadorHastaMayor } from './validadores';
     @if (submitted && form.valid) {
       <p class="msg exito">Formulario válido. Listo para navegar al siguiente paso.</p>
     }
+
+    <!-- Sección R2: Búsqueda reactiva sobre el listado de reservas -->
+    <div class="seccion-busqueda">
+      <h3>Búsqueda de reservas</h3>
+
+      <div class="campo">
+        <label>Buscar</label>
+        <input type="text" [formControl]="buscar" placeholder="Responsable o espacio..." />
+      </div>
+
+      <p><strong>Último valor:</strong> {{ ultimoValor() }}</p>
+      <p><strong>Emisiones:</strong> {{ emisiones() }}</p>
+
+      <h4>Resultados filtrados ({{ reservasFiltradas().length }})</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Responsable</th>
+            <th>Espacio</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (reserva of reservasFiltradas(); track reserva.id) {
+            <tr>
+              <td>{{ reserva.responsable }}</td>
+              <td>{{ reserva.espacio }}</td>
+              <td>{{ reserva.estado }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3">Sin coincidencias</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   `,
   styles: [`
     .campo {
@@ -144,14 +187,57 @@ import { validadorMultiplo, validadorHastaMayor } from './validadores';
       font-size: 0.9rem;
       margin-top: 12px;
     }
+
+    .seccion-busqueda {
+      margin-top: 32px;
+      padding: 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+
+    .seccion-busqueda h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #1e293b;
+    }
+
+    .seccion-busqueda table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    .seccion-busqueda th,
+    .seccion-busqueda td {
+      border: 1px solid #e2e8f0;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .seccion-busqueda th {
+      background: #e2e8f0;
+      font-weight: 600;
+    }
   `]
 })
 export class Parcial2Component {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private reservaService = inject(ReservaService);
 
   form: FormGroup;
   submitted = false;
+
+  // FormControl de búsqueda independiente (R2)
+  buscar = new FormControl<string>('', { nonNullable: true });
+
+  // Señal del último valor emitido por el flujo de búsqueda
+  ultimoValor!: Signal<string>;
+
+  // Señal del contador de emisiones del flujo de búsqueda
+  emisiones!: Signal<number>;
 
   constructor() {
     this.form = this.fb.nonNullable.group(
@@ -170,6 +256,26 @@ export class Parcial2Component {
         hasta: [11, Validators.required]
       },
       { validators: [validadorHastaMayor()] }
+    );
+
+    // Flujo reactivo de búsqueda (R2):
+    // 1) trim, 2) debounceTime(300), 3) distinctUntilChanged
+    const textoBusqueda$ = this.buscar.valueChanges.pipe(
+      map((v) => v.trim()),
+      debounceTime(300),
+      distinctUntilChanged()
+    );
+
+    // Último valor emitido (inicialmente vacío)
+    this.ultimoValor = toSignal(textoBusqueda$, { initialValue: '' });
+
+    // Contador de emisiones: se incrementa por cada emisión válida del flujo.
+    // scan acumula el conteo; toSignal gestiona la suscripción y limpieza automáticamente.
+    this.emisiones = toSignal(
+      textoBusqueda$.pipe(
+        scan((acc) => acc + 1, 0)
+      ),
+      { initialValue: 0 }
     );
   }
 
@@ -190,6 +296,23 @@ export class Parcial2Component {
     return this.form.get('hasta')!;
   }
 
+  // Listado base del servicio (reservas existentes del proyecto)
+  reservasBase: Signal<ReadonlyArray<Reserva>> = this.reservaService.reservas;
+
+  // Filtro inmutable sobre el listado base (no muta arreglos, devuelve nuevo)
+  reservasFiltradas = computed(() => {
+    const texto = this.ultimoValor();
+    if (!texto) {
+      return this.reservasBase();
+    }
+    const normalizado = texto.toLowerCase();
+    return this.reservasBase().filter(
+      (r: Reserva) =>
+        r.responsable.toLowerCase().includes(normalizado) ||
+        r.espacio.toLowerCase().includes(normalizado)
+    );
+  });
+
   onSubmit() {
     this.submitted = true;
     this.form.markAllAsTouched();
@@ -198,7 +321,7 @@ export class Parcial2Component {
       return;
     }
 
-    // Preparado para navegar en el siguiente paso (R2)
+    // Preparado para navegar en el siguiente paso (R2/R3)
     // Ejemplo: this.router.navigate(['/parcial2/resultado']);
   }
 }

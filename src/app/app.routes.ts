@@ -4,6 +4,7 @@ import { ReservaFormComponent } from './components/reserva-form/reserva-form.com
 import { ReservaDetalleComponent } from './components/reserva-detalle/reserva-detalle.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 import { NoEncontradoComponent } from './components/no-encontrado/no-encontrado.component';
+import { Parcial2Component } from './parcial2/parcial2.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'reservas', pathMatch: 'full' },
@@ -18,5 +19,6 @@ export const routes: Routes = [
       ),
     title: 'Estadísticas'
   },
+  { path: 'parcial2', component: Parcial2Component, title: 'Parcial 2 - R1' },
   { path: '**', component: NoEncontradoComponent, title: 'Página no encontrada' }
 ];

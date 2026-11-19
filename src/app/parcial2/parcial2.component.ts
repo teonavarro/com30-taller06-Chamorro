@@ -321,7 +321,11 @@ export class Parcial2Component {
       return;
     }
 
-    // Preparado para navegar en el siguiente paso (R2/R3)
-    // Ejemplo: this.router.navigate(['/parcial2/resultado']);
+    const codigo = this.codigo.value;
+    const cantidad = this.cantidad.value;
+
+    this.router.navigate(['/parcial2/detalle', codigo], {
+      queryParams: { cantidad: cantidad.toString() }
+    });
   }
 }

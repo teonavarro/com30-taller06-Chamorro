@@ -3,8 +3,9 @@ import { ReservaListaComponent } from './components/reserva-lista/reserva-lista.
 import { ReservaFormComponent } from './components/reserva-form/reserva-form.component';
 import { ReservaDetalleComponent } from './components/reserva-detalle/reserva-detalle.component';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
-import { NoEncontradoComponent } from './components/no-encontrado/no-encontrado.component';
 import { Parcial2Component } from './parcial2/parcial2.component';
+import { DetalleParcial2Component } from './parcial2/detalle-parcial2.component';
+import { NoEncontradoParcial2Component } from './parcial2/no-encontrado-parcial2.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'reservas', pathMatch: 'full' },
@@ -19,6 +20,7 @@ export const routes: Routes = [
       ),
     title: 'Estadísticas'
   },
-  { path: 'parcial2', component: Parcial2Component, title: 'Parcial 2 - R1' },
-  { path: '**', component: NoEncontradoComponent, title: 'Página no encontrada' }
+  { path: 'parcial2', component: Parcial2Component, title: 'Parcial 2 - R1 y R2' },
+  { path: 'parcial2/detalle/:codigo', component: DetalleParcial2Component, title: 'Parcial 2 - Detalle' },
+  { path: '**', component: NoEncontradoParcial2Component, title: 'Página no encontrada' }
 ];
